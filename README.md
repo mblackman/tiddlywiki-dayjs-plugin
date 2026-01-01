@@ -8,7 +8,7 @@ This plugin bridges the Day.js library into TiddlyWiki's CommonJS environment, e
 
 ### 1. [Preferred] Install from Example TiddlyWiki
 
-Go to [https://dayjs-plugin-example.tiddlyhost.com/] and follow the installation instructions on the page.
+Go to the [Example TiddlyWiki](https://dayjs-plugin-example.tiddlyhost.com/) and follow the installation instructions on the page.
 
 ### 2. Manual: Build the Plugin
 
