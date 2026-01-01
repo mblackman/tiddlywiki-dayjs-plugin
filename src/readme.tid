@@ -1,0 +1,11 @@
+! Day.js for TiddlyWiki
+
+This plugin provides the `<<dayjs>>` macro for robust date formatting and ISO 8601 support.
+
+!! Usage
+`<<dayjs "2024-12-31" "WW-GGGG">>`
+
+!! Features
+* **Core Day.js:** Lightweight date handling.
+* **ISO Week:** Correctly handles week numbers.
+* **Advanced Format:** Support for `Q` (Quarter), `Do` (Ordinal), and `GGGG` (ISO Year).
