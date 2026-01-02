@@ -1,6 +1,6 @@
 {
     "name": "tiddlywiki-dayjs-plugin",
-    "version": "1.11.18",
+    "version": "1.11.19",
     "scripts": {
         "build": "node scripts/build.js",
         "test": "jest"
@@ -13,7 +13,7 @@
         }
     },
     "dependencies": {
-        "dayjs": "1.11.18"
+      "dayjs": "1.11.19"
     },
     "devDependencies": {
         "jest": "^30.2.0"
