@@ -1,0 +1,72 @@
+name: Dependabot Auto-Update
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-update:
+    runs-on: ubuntu-latest
+    # Only run for Dependabot PRs
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Checkout the PR branch so we can push back to it
+          ref: ${{ github.head_ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
+
+      - name: Sync Version and Build
+        id: build
+        run: |
+          # Extract version from the newly installed dayjs package
+          DAYJS_VERSION=$(node -p "require('dayjs/package.json').version")
+          echo "DAYJS_VERSION=$DAYJS_VERSION" >> $GITHUB_ENV
+          
+          echo "Syncing project version to $DAYJS_VERSION..."
+          
+          # Update package.json version field to match dayjs version
+          npm version $DAYJS_VERSION --no-git-tag-version --allow-same-version
+          
+          # Update src/plugin.info version field
+          node -e "
+            const fs = require('fs');
+            const path = './src/plugin.info';
+            const info = JSON.parse(fs.readFileSync(path, 'utf8'));
+            info.version = '$DAYJS_VERSION';
+            fs.writeFileSync(path, JSON.stringify(info, null, 4));
+          "
+          
+          # Run the build script to generate updated dist/dayjs-plugin.json
+          npm run build
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "dependabot-build-bot"
+          git config user.email "dependabot-build-bot@users.noreply.github.com"
+          
+          # Add all files that track version or build artifacts
+          git add package.json package-lock.json src/plugin.info dist/dayjs-plugin.json
+          
+          # Commit and push if there are changes
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: update build artifacts and version to ${{ env.DAYJS_VERSION }}"
+            git push
+          fi
