@@ -61,7 +61,7 @@ jobs:
           git config user.email "dependabot-build-bot@users.noreply.github.com"
           
           # Add all files that track version or build artifacts
-          git add package.json package-lock.json src/plugin.info dist/dayjs-plugin.json
+          git add package.json package-lock.json src/plugin.info
           
           # Commit and push if there are changes
           if git diff --staged --quiet; then
